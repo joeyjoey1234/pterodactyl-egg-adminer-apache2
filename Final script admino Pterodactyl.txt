@@ -1,0 +1,107 @@
+#!/bin/bash
+# joeys adminer scripppy
+#
+# Server Files: /mnt/server
+
+printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
+apt-get update
+apt-get install dialog apt-utils -y
+
+
+
+apt-get -y dist-upgrade
+
+apt-get -y upgrade
+export DEBIAN_FRONTEND=noninteractive
+apt update
+apt-get -y upgrade
+apt-get update --fix-missing
+apt-get install -y adminer
+apt-get install curl
+
+a2enmod ssl
+
+
+mkdir /mnt/server/var/
+mkdir /mnt/server/var/www/
+mkdir /mnt/server/var/www/html
+
+curl https://raw.githubusercontent.com/joeyjoey1234/pterodactyl-egg-adminer-apache2/main/conf.php > /mnt/server/var/www/html/conf.php
+
+cp -R /usr/share/adminer /mnt/server
+
+
+
+
+
+rm /var/www/html/index.html
+
+cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/
+
+rm /etc/apache2/sites-enabled/000-default.conf
+
+sed -i '5s\.*\		DocumentRoot /home/container/var/www/html/conf.php \' /etc/apache2/sites-enabled/default-ssl.conf
+
+
+sed -i '2s/.*/	DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm /' /etc/apache2/mods-enabled/dir.conf
+
+sed -i '2s\.*\		<VirtualHost _default_:'"${SERVER_PORT}"'> \' /etc/apache2/sites-enabled/default-ssl.conf
+
+
+sed -i '8s/.*/	Listen '"${SERVER_PORT}"'/' /etc/apache2/ports.conf
+
+
+sed -i '12s/.*/	Listen '"${SERVER_PORT}"'/' /etc/apache2/ports.conf
+
+
+sed -i '226s/.*/ServerName '"${SERVER_DOMAINNAME}"'/' /etc/apache2/apache2.conf
+
+
+echo -e ''"${PEM_KEY}"'' > /mnt/server/${SERVER_DOMAINNAME}.pem
+
+
+echo -e ''"${CERT_KEY}"'' > /mnt/server/${SERVER_DOMAINNAME}.key
+
+
+
+
+sed -i '69s\.*\ServerRoot "/home/container/apache2/"\' /etc/apache2/apache2.conf
+
+
+
+sed -i '32s\.*\		SSLCertificateFile	/home/container/'"${SERVER_DOMAINNAME}"'.pem \' /etc/apache2/sites-enabled/default-ssl.conf
+
+
+sed -i '134s\.*\ErrorLog /home/container/error.log \' /etc/apache2/apache2.conf
+
+sed -i '33s\.*\		SSLCertificateKeyFile /home/container/'"${SERVER_DOMAINNAME}"'.key \' /etc/apache2/sites-enabled/default-ssl.conf
+
+
+
+sed -i '13s\.*\		ErrorLog /home/container/error.log \' /etc/apache2/sites-enabled/default-ssl.conf
+
+
+sed -i '14s\.*\		CustomLog /home/container/access.log combined \' /etc/apache2/sites-enabled/default-ssl.conf
+
+
+
+sed -i '2s\.*\CustomLog /home/container/other_vhosts_access.log vhost_combined \' /etc/apache2/conf-enabled/other-vhosts-access-log.conf
+
+
+sed -i '87s\.*\PidFile /home/container/apache2.pid \' /etc/apache2/apache2.conf
+
+
+sed -i '170s\.*\<Directory /home/container/var/www/> \' /etc/apache2/apache2.conf
+
+
+
+
+
+
+
+
+
+cp -R /etc/apache2 /mnt/server
+
+
+

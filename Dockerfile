@@ -36,8 +36,5 @@ RUN sed -i '2s/.*/	DirectoryIndex index.php index.html index.cgi index.pl index.
 EXPOSE 25565
 
 
-
-COPY ./entrypoint.sh /entrypoint.sh
-
-CMD ["/bin/bash", "/entrypoint.sh"]
+CMD ["/bin/bash"]
 

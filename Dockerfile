@@ -14,7 +14,7 @@ RUN apt-get -y upgrade
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update --fix-missing
 RUN apt-get install -y adminer
-RUN apt-get install python3-certbot-apache
+RUN apt-get install -y python3-certbot-apache
 RUN a2enmod ssl
 
 

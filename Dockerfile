@@ -6,6 +6,8 @@ RUN printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
 RUN apt-get update
 RUN apt-get install dialog apt-utils -y
 
+
+
 RUN apt-get -y dist-upgrade
 
 RUN apt-get -y upgrade
@@ -15,6 +17,7 @@ RUN apt-get install -y adminer
 RUN apt-get install -y adminer 
 RUN apt-get install -y snapd
 RUN a2enmod ssl
+RUN apk add --no-cache --update curl ca-certificates openssl git tar bash sqlite fontconfig
 
 RUN cp /etc/adminer/conf.php /var/www/html/
 
@@ -35,6 +38,7 @@ EXPOSE 25565
 
 
 COPY ./entrypoint.sh /entrypoint.sh
+
 CMD ["/bin/bash", "/entrypoint.sh"]
 
 

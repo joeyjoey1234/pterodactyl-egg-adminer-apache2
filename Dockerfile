@@ -17,7 +17,7 @@ RUN apt-get install -y adminer
 RUN apt-get install -y adminer 
 RUN apt-get install -y snapd
 RUN a2enmod ssl
-RUN apk add --no-cache --update curl ca-certificates openssl git tar bash sqlite fontconfig
+
 
 RUN cp /etc/adminer/conf.php /var/www/html/
 

@@ -14,27 +14,18 @@ RUN apt-get -y upgrade
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update --fix-missing
 RUN apt-get install -y adminer
-RUN apt-get install -y adminer 
-RUN apt-get install -y snapd
+RUN apt-get install python3-certbot-apache
 RUN a2enmod ssl
 
 
-RUN cp /etc/adminer/conf.php /var/www/html/
 
-RUN rm /var/www/html/index.html
+USER container
+ENV  USER=container HOME=/home/container
 
-RUN cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/
+WORKDIR /home/container
+COPY ./entrypoint.sh /entrypoint.sh
 
-RUN rm /etc/apache2/sites-enabled/000-default.conf
-
-RUN sed -i '5s\.*\		DocumentRoot /var/www/html/conf.php \' /etc/apache2/sites-enabled/default-ssl.conf
-
-
-RUN sed -i '2s/.*/	DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm /' /etc/apache2/mods-enabled/dir.conf
+CMD ["/bin/bash", "/entrypoint.sh"]
 
 
-EXPOSE 25565
-
-
-CMD ["/bin/bash"]
 
